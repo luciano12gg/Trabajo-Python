@@ -1,4 +1,4 @@
-"""[Docstring del módulo: una sola línea que diga qué hace el programa.]"""
+"""Ficha técnica de una aplicación móvil antes de publicarla en la tienda."""
 
 from typing import Final
 
@@ -28,7 +28,7 @@ COLOR_ICONO: Final[int] = 0xFFD84315         # ARGB
 # Datos del programa. Solo hay que cambiar AUTORES.
 # ---------------------------------------------------------------------------
 VERSION_PROGRAMA: Final[str] = "1.0.0"
-AUTORES: Final[str] = "[usuario] · [usuario]"
+AUTORES: Final[str] = "[Luciano] · [Jose Antonio] · [Carlos]"
 PENDIENTE: Final[str] = "  (opción pendiente de implementar)"
 
 # ---------------------------------------------------------------------------

@@ -35,7 +35,16 @@ PENDIENTE: Final[str] = "  (opción pendiente de implementar)"
 # Constantes de la pareja. Todo valor fijo del programa va aquí, con nombre.
 # ---------------------------------------------------------------------------
 ANCHO: Final[int] = 44
+ANCHO_ETIQUETA = 26
+ANCHO_DECIMAL = 3
+ANCHO_PERMISOS = 7
+ANCHO_CANAL_BINARIO = 8
+ANCHO_CANAL_HEX = 2
+ANCHO_ARGB_HEX = 8
+ANCHO_RGB_HEX = 6
+
 COMISION: Final[float] = 0.15
+CERO_REAL = 0.0
 PORCENTAJE: Final[int] = 100
 MB: Final[int] = 1_000_000
 MIB: Final[int] = 1_048_576
@@ -43,6 +52,14 @@ BITS_MENOR: Final[int] = 8
 BITS_MAYOR: Final[int] = 16
 BITS_ALFA: Final[int] = 24
 MASCARA: Final[int] = 0xFF
+MASCARA_BYTE = 0xFF
+MASCARA_RGB = 0xFFFFFF
+DESPLAZAMIENTO_ALFA = 24
+DESPLAZAMIENTO_ROJO = 16
+DESPLAZAMIENTO_VERDE = 8
+DESPLAZAMIENTO_MAYOR = 16
+DESPLAZAMIENTO_MENOR = 8
+PORCENTAJE = 100
 PERMISO_INTERNET: Final[int] = 0b0000001
 PERMISO_NOTIFICACIONES: Final[int] = 0b0000010
 PERMISO_CAMARA: Final[int] = 0b0000100
@@ -50,11 +67,16 @@ PERMISO_UBICACION: Final[int] = 0b0001000
 PERMISO_CONTACTOS: Final[int] = 0b0010000
 PERMISO_MICROFONO: Final[int] = 0b0100000
 PERMISO_ALMACENAMIENTO: Final[int] = 0b1000000
+SIN_BITS = 0
 
 
 # ---------------------------------------------------------------------------
 # Funciones auxiliares de la pareja. Al menos una, usada en varias opciones.
 # ---------------------------------------------------------------------------
+def mostrar_fila(etiqueta: str, valor: object) -> None:
+    """Muestra una etiqueta y su valor en columnas."""
+    print(f"{etiqueta:<{ANCHO_ETIQUETA}}{valor}")
+
 
 def mostrar(nombre: str, dato: object) -> None:
     print(f"{nombre:<20} {dato}")
@@ -118,18 +140,101 @@ def opcion_4_version() -> None:
     mostrar("Desempaquetado:", f"{mayor}.{menor}.{parche}")
 
 def opcion_5_permisos() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+    """Muestra los permisos y calcula la máscara sin ubicación."""
+    pide_internet = (PERMISOS & PERMISO_INTERNET) != SIN_BITS
+    pide_notificaciones = (
+        PERMISOS & PERMISO_NOTIFICACIONES
+    ) != SIN_BITS
+    pide_camara = (PERMISOS & PERMISO_CAMARA) != SIN_BITS
+    pide_ubicacion = (PERMISOS & PERMISO_UBICACION) != SIN_BITS
+    pide_contactos = (PERMISOS & PERMISO_CONTACTOS) != SIN_BITS
+    pide_microfono = (PERMISOS & PERMISO_MICROFONO) != SIN_BITS
+    pide_almacenamiento = (
+        PERMISOS & PERMISO_ALMACENAMIENTO
+    ) != SIN_BITS
+
+    sin_ubicacion = PERMISOS & ~PERMISO_UBICACION
+
+    print("PERMISOS")
+    mostrar_fila("En binario:", f"{PERMISOS:0{ANCHO_PERMISOS}b}")
+    mostrar_fila("Internet:", pide_internet)
+    mostrar_fila("Notificaciones:", pide_notificaciones)
+    mostrar_fila("Cámara:", pide_camara)
+    mostrar_fila("Ubicación:", pide_ubicacion)
+    mostrar_fila("Contactos:", pide_contactos)
+    mostrar_fila("Micrófono:", pide_microfono)
+    mostrar_fila("Almacenamiento:", pide_almacenamiento)
+    mostrar_fila(
+        "Sin ubicación:",
+        f"{sin_ubicacion:0{ANCHO_PERMISOS}b}",
+    )
 
 
 def opcion_6_color() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+    """Descompone el color ARGB y muestra su equivalente CSS."""
+    alfa = (COLOR_ICONO >> DESPLAZAMIENTO_ALFA) & MASCARA_BYTE
+    rojo = (COLOR_ICONO >> DESPLAZAMIENTO_ROJO) & MASCARA_BYTE
+    verde = (COLOR_ICONO >> DESPLAZAMIENTO_VERDE) & MASCARA_BYTE
+    azul = COLOR_ICONO & MASCARA_BYTE
+
+    opacidad = alfa / MASCARA_BYTE * PORCENTAJE
+    color_rgb = COLOR_ICONO & MASCARA_RGB
+
+    print("COLOR DEL ICONO")
+    mostrar_fila(
+        "ARGB:",
+        f"0x{COLOR_ICONO:0{ANCHO_ARGB_HEX}X}",
+    )
+    mostrar_fila(
+        "Rojo:",
+        f"{rojo:>{ANCHO_DECIMAL}} "
+        f"{rojo:0{ANCHO_CANAL_BINARIO}b} "
+        f"{rojo:0{ANCHO_CANAL_HEX}X}",
+    )
+    mostrar_fila(
+        "Verde:",
+        f"{verde:>{ANCHO_DECIMAL}} "
+        f"{verde:0{ANCHO_CANAL_BINARIO}b} "
+        f"{verde:0{ANCHO_CANAL_HEX}X}",
+    )
+    mostrar_fila(
+        "Azul:",
+        f"{azul:>{ANCHO_DECIMAL}} "
+        f"{azul:0{ANCHO_CANAL_BINARIO}b} "
+        f"{azul:0{ANCHO_CANAL_HEX}X}",
+    )
+    mostrar_fila("Opacidad:", f"{opacidad:.1f} %")
+    mostrar_fila("Para CSS:", f"#{color_rgb:0{ANCHO_RGB_HEX}X}")
 
 
 def opcion_7_tipos() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+    """Muestra tipos y valores, incluidas conversiones de datos."""
+    media = ESTRELLAS / VALORACIONES
+    pide_camara = (PERMISOS & PERMISO_CAMARA) != SIN_BITS
+    texto_descargas = str(DESCARGAS)
+
+    mayor_desplazada = VERSION_MAYOR << DESPLAZAMIENTO_MAYOR
+    menor_desplazada = VERSION_MENOR << DESPLAZAMIENTO_MENOR
+    codigo = mayor_desplazada | menor_desplazada | VERSION_PARCHE
+
+    # int + float produce un resultado float.
+    descargas_float = DESCARGAS + 0.0
+
+    print("TIPOS DE DATOS")
+    mostrar_fila("NOMBRE:", f"{type(NOMBRE)} {NOMBRE}")
+    mostrar_fila("DESCARGAS:", f"{type(DESCARGAS)} {DESCARGAS}")
+    mostrar_fila("PRECIO:", f"{type(PRECIO)} {PRECIO}")
+    mostrar_fila("media:", f"{type(media)} {media}")
+    mostrar_fila("pide_camara:", f"{type(pide_camara)} {pide_camara}")
+    mostrar_fila(
+        "texto_descargas:",
+        f"{type(texto_descargas)} {texto_descargas}",
+    )
+    mostrar_fila("codigo:", f"{type(codigo)} {codigo}")
+    mostrar_fila(
+        "descargas_float:",
+        f"{type(descargas_float)} {descargas_float}",
+    )
 
 
 def opcion_8_redondeo() -> None:

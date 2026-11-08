@@ -238,7 +238,7 @@ def opcion_7_tipos() -> None:
 
 
 def opcion_8_redondeo() -> None:
-     """Compara los dos tipos de redondeo."""
+    """Compara los dos tipos de redondeo."""
     media = calcular_media()
     decimal = Decimal(ESTRELLAS) / Decimal(VALORACIONES)
     escolar_1 = decimal.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)

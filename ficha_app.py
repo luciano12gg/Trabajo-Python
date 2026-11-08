@@ -238,18 +238,41 @@ def opcion_7_tipos() -> None:
 
 
 def opcion_8_redondeo() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+     """Compara los dos tipos de redondeo."""
+    media = calcular_media()
+    decimal = Decimal(ESTRELLAS) / Decimal(VALORACIONES)
+    escolar_1 = decimal.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    escolar_2 = decimal.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    print("REDONDEO DE LA VALORACIÓN MEDIA")
+    mostrar("Valor exacto:", media)
+    mostrar("round(), 1 dec.:", round(media, 1))
+    mostrar("Escolar, 1 dec.:", escolar_1)
+    mostrar("round(), 2 dec.:", round(media, 2))
+    mostrar("Escolar, 2 dec.:", escolar_2)
 
 
 def opcion_9_ficha() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+    """Muestra juntas las primeras cuatro opciones."""
+    print("=" * ANCHO)
+    print(f"{'FICHA DE LA APLICACIÓN':^{ANCHO}}")
+    print("=" * ANCHO)
+    opcion_1_identificacion()
+    print("-" * ANCHO)
+    opcion_2_tamano()
+    print("-" * ANCHO)
+    opcion_3_ingresos()
+    print("-" * ANCHO)
+    opcion_4_version()
+    print("=" * ANCHO)
 
 
 def opcion_10_acerca_de() -> None:
-    """[Docstring: qué hace esta opción.]"""
-    print(PENDIENTE)
+    """Muestra los datos del programa."""
+    print("ACERCA DE")
+    print(__doc__)
+    mostrar("Versión:", VERSION_PROGRAMA)
+    mostrar("Autores:", AUTORES)
+    mostrar("Python:", sys.version.split()[0])
 
 
 # ---------------------------------------------------------------------------
